@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ibrahim Bajnaid — Cybersecurity Engineer & SOC Analyst. EC-Council CND Certified. Available for internships and junior cybersecurity roles.">
+<title>IBRAHIM BAJNAID — Cybersecurity Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:ital,wght@0,300;0,400;0,500;1,300&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   RESET & CUSTOM PROPERTIES
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --r: #C8102E;
+  --r2: #FF1F3D;
+  --r-dim: rgba(200,16,46,0.15);
+  --r-glow: rgba(200,16,46,0.25);
+  --ink: #06080B;
+  --ink2: #0C0F14;
+  --ink3: #121720;
+  --surface: rgba(255,255,255,0.03);
+  --surface2: rgba(255,255,255,0.06);
+  --line: rgba(255,255,255,0.07);
+  --t1: #ECEEF2;
+  --t2: #7A8494;
+  --t3: #3E4755;
+  --mono: 'Fragment Mono', monospace;
+  --sans: 'Epilogue', sans-serif;
+  --display: 'Syne', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--ink);
+  color: var(--t1);
+  overflow-x: hidden;
+  /* FIX: cursor:none only on desktop — managed via media query */
+  cursor: none;
+}
+
+/* FIX: Grain overlay — pointer-events:none, won't block clicks */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  mix-blend-mode: overlay;
+}
+
+/* ═══════════════════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════════════════ */
+#cur {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--r2);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width .15s, height .15s, background .15s;
+  mix-blend-mode: screen;
+  /* FIX: Start hidden until mouse moves */
+  opacity: 0;
+}
+#cur2 {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(200,16,46,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width .3s cubic-bezier(.23,1,.32,1), height .3s cubic-bezier(.23,1,.32,1), border-color .3s;
+  /* FIX: Start hidden until mouse moves */
+  opacity: 0;
+}
+#cur.visible { opacity: 1; }
+#cur2.visible { opacity: 1; }
+.c-big #cur { width: 48px; height: 48px; background: rgba(200,16,46,0.15); }
+.c-big #cur2 { width: 0; height: 0; }
+
+/* ═══════════════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════════════ */
+#loader {
+  position: fixed; inset: 0;
+  z-index: 10000; /* FIX: Higher than cursor z-index */
+  background: var(--ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.loader-text {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--t3); text-transform: uppercase;
+}
+.loader-bar {
+  width: 200px; height: 1px;
+  background: var(--t3);
+  position: relative; overflow: hidden;
+}
+.loader-fill {
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--r);
+  animation: load 1.4s cubic-bezier(.77,0,.18,1) forwards;
+}
+@keyframes load { to { left: 0; } }
+.loader-name {
+  font-family: var(--display); font-size: 13px; font-weight: 800;
+  letter-spacing: 8px; text-transform: uppercase; color: var(--t1); margin-top: 10px;
+}
+/* FIX: Use visibility + opacity for loader hide to avoid layout shifts */
+#loader.gone {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease 0.3s;
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 800;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 52px;
+  transition: padding .3s, background .3s, border-color .3s;
+}
+nav.stuck {
+  padding: 16px 52px;
+  background: rgba(6,8,11,0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px); /* FIX: Safari prefix */
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-sig {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 2px;
+  color: var(--t1); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-sig-dot {
+  width: 7px; height: 7px;
+  background: var(--r); border-radius: 50%;
+  box-shadow: 0 0 10px var(--r-glow);
+  animation: blink 2s ease-in-out infinite;
+  flex-shrink: 0; /* FIX: Prevent dot from shrinking */
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.nav-right {
+  display: flex; align-items: center; gap: 0;
+}
+/* Nav links share a consistent gap, separated from the CTA */
+.nav-links {
+  display: flex; align-items: center; gap: 32px;
+  padding-right: 32px;
+  border-right: 1px solid var(--line);
+  margin-right: 28px;
+}
+.nav-right a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t2); text-decoration: none;
+  transition: color .2s; white-space: nowrap;
+}
+.nav-right a:hover { color: var(--t1); }
+.nav-hire {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: #fff;
+  background: var(--r); padding: 10px 22px; text-decoration: none;
+  transition: box-shadow .25s, background .25s;
+  white-space: nowrap; flex-shrink: 0;
+  /* Subtle border so it reads as a distinct CTA, not floating text */
+  border: 1px solid transparent;
+}
+.nav-hire:hover {
+  box-shadow: 0 0 28px var(--r-glow);
+  background: var(--r2);
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  position: relative; overflow: hidden;
+}
+
+.hero-left {
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 120px 52px 80px;
+  position: relative; z-index: 2;
+}
+
+.hero-status {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--t2); margin-bottom: 48px;
+}
+.hero-status-badge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border: 1px solid var(--line); background: var(--surface);
+}
+.hero-status-dot {
+  width: 6px; height: 6px;
+  background: #00FF88; border-radius: 50%;
+  box-shadow: 0 0 8px #00FF88;
+  animation: blink 1.5s ease-in-out infinite;
+  flex-shrink: 0; /* FIX: Prevent dot shrink */
+}
+
+.hero-h1 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(64px, 7.5vw, 116px);
+  line-height: 0.88; letter-spacing: -2px;
+  color: var(--t1); margin-bottom: 40px;
+  overflow: hidden;
+}
+/* FIX: Wrap each word in its own overflow:hidden container for clean slide-up */
+.hero-h1 .word-wrap { overflow: hidden; display: block; }
+.hero-h1 .word {
+  display: block;
+  transform: translateY(110%);
+  animation: slideUp .9s cubic-bezier(.77,0,.18,1) forwards;
+}
+.hero-h1 .word-wrap:nth-child(1) .word { animation-delay: 1.6s; }
+.hero-h1 .word-wrap:nth-child(2) .word {
+  animation-delay: 1.75s;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+}
+.hero-h1 .word-wrap:nth-child(3) .word { animation-delay: 1.9s; color: var(--r); }
+@keyframes slideUp { to { transform: translateY(0); } }
+
+.hero-meta {
+  display: flex; gap: 40px; flex-wrap: wrap; /* FIX: Added flex-wrap */
+  margin-bottom: 52px;
+  opacity: 0; animation: fadeIn .8s ease forwards 2.2s;
+}
+.hero-meta-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--t3); margin-bottom: 4px;
+}
+.hero-meta-value { font-size: 14px; color: var(--t2); font-weight: 300; }
+
+.hero-cta-row {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap; /* FIX: Added flex-wrap */
+  opacity: 0; animation: fadeIn .8s ease forwards 2.4s;
+}
+.btn-r {
+  display: inline-block; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--r); color: #fff; text-decoration: none;
+  padding: 16px 34px;
+  transition: box-shadow .25s, transform .2s, background .2s;
+}
+.btn-r:hover { box-shadow: 0 0 48px rgba(200,16,46,0.5); transform: translateY(-2px); background: var(--r2); }
+.btn-ghost {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t2); text-decoration: none;
+  display: flex; align-items: center; gap: 10px; transition: color .2s;
+}
+.btn-ghost:hover { color: var(--t1); }
+.btn-ghost-line { width: 32px; height: 1px; background: currentColor; transition: width .3s; }
+.btn-ghost:hover .btn-ghost-line { width: 56px; }
+
+/* ═══════════════════════════════════════════════════
+   HERO RIGHT — RADAR
+═══════════════════════════════════════════════════ */
+.hero-right {
+  position: relative;
+  /* Remove overflow:hidden — it was clipping the radar labels */
+  border-left: 1px solid var(--line);
+  /* Ensure it sits below the fixed nav visually */
+  padding-top: 80px;
+}
+.hero-canvas {
+  /* Fill the full cell, center absolutely */
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Push down from nav so radar never overlaps */
+  padding-top: 60px;
+}
+.radar-wrap {
+  position: relative;
+  /* Use vmin-based sizing so it always fits its container */
+  width: min(440px, 44vw);
+  height: min(440px, 44vw);
+  flex-shrink: 0;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 2s;
+}
+.radar-svg {
+  width: 100%; height: 100%;
+  /* overflow visible needed for filter glow bleed */
+  overflow: visible;
+  display: block;
+}
+
+/* ── Canvas radar ── */
+#radarCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Canvas pixels set in JS to match devicePixelRatio */
+}
+
+/* Radar labels sit over the canvas absolutely */
+.radar-label {
+  position: absolute;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t3);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn .6s ease forwards 2.6s;
+}
+.radar-label.tl { top: 10%; left: 8%; }
+.radar-label.tr { top: 14%; right: 6%; }
+.radar-label.bl { bottom: 12%; left: 6%; color: var(--r); }
+
+.hero-data-top {
+  position: absolute;
+  /* Respect the nav height — was overlapping at top:32px */
+  top: 100px;
+  right: 36px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); text-align: right; line-height: 2.2;
+  opacity: 0; animation: fadeIn .8s ease forwards 2.2s;
+  z-index: 1;
+}
+.hero-data-bot {
+  position: absolute; bottom: 44px; left: 36px;
+  opacity: 0; animation: fadeIn .8s ease forwards 2.4s;
+  z-index: 1;
+}
+.terminal-line { font-family: var(--mono); font-size: 10px; color: var(--t3); line-height: 1.8; }
+.terminal-line .green { color: #00C170; }
+.terminal-line .red { color: var(--r); }
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 52px; right: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  opacity: 0; animation: fadeIn .8s ease forwards 2.6s;
+}
+.hero-scroll-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--t3); }
+.hero-scroll-track {
+  flex: 1; height: 1px; background: var(--line);
+  margin: 0 24px; position: relative; overflow: hidden;
+}
+.hero-scroll-prog {
+  position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, var(--r), transparent);
+  animation: scanH 3s ease-in-out infinite;
+}
+@keyframes scanH { 0%{left:-40%} 100%{left:140%} }
+
+/* ═══════════════════════════════════════════════════
+   SECTION DIVIDERS
+═══════════════════════════════════════════════════ */
+.band {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--r), rgba(200,16,46,0.3), transparent);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════════ */
+.s { padding: 130px 52px; position: relative; overflow: hidden; }
+.s-alt { background: var(--ink2); }
+
+.s-eyebrow {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--r); margin-bottom: 20px; display: flex; align-items: center; gap: 14px;
+}
+.s-eyebrow::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--r); opacity: .5; }
+
+/* ═══════════════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════════════ */
+.about-layout { display: grid; grid-template-columns: 5fr 4fr; gap: 100px; align-items: start; /* FIX: was center, causes jump on reveal */ }
+.about-headline {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(40px, 5vw, 72px); line-height: 1; letter-spacing: -1px;
+  color: var(--t1); margin-bottom: 36px;
+}
+.about-headline em { font-style: normal; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.2); display: block; }
+.about-body { font-size: 16px; line-height: 1.9; color: var(--t2); font-weight: 300; max-width: 480px; }
+.about-body strong { color: var(--t1); font-weight: 500; }
+.about-body .tag { display: inline; color: var(--r); font-weight: 400; }
+.about-body p+p { margin-top: 18px; }
+.about-right { display: flex; flex-direction: column; gap: 2px; }
+.kv {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--line);
+  transition: border-color .25s, background .25s;
+  position: relative; overflow: hidden;
+}
+.kv::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--r); transform: scaleY(0); transform-origin: bottom;
+  transition: transform .35s cubic-bezier(.77,0,.18,1);
+}
+.kv:hover { border-color: rgba(200,16,46,.3); background: var(--surface); }
+.kv:hover::before { transform: scaleY(1); }
+.kv-k {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); padding: 20px; writing-mode: vertical-rl; text-orientation: mixed;
+  border-right: 1px solid var(--line); display: flex; align-items: center; min-width: 48px;
+}
+.kv-v { padding: 20px 24px; font-size: 14px; color: var(--t1); font-weight: 300; line-height: 1.5; display: flex; align-items: center; }
+
+/* ═══════════════════════════════════════════════════
+   SKILLS BENTO
+═══════════════════════════════════════════════════ */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; }
+.bento-cell {
+  background: var(--ink3); border: 1px solid var(--line);
+  padding: 32px; position: relative; overflow: hidden;
+  transition: border-color .3s, background .3s;
+}
+.bento-cell:hover { border-color: rgba(200,16,46,.25); background: rgba(255,255,255,.02); }
+/* FIX: Radial gradient follows mouse via CSS vars — only shown on hover */
+.bento-cell::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(200,16,46,0.06) 0%, transparent 60%);
+  opacity: 0; transition: opacity .3s; pointer-events: none;
+}
+.bento-cell:hover::after { opacity: 1; }
+.bc1 { grid-column: span 5; grid-row: span 2; }
+.bc2 { grid-column: span 4; }
+.bc3 { grid-column: span 3; }
+.bc4 { grid-column: span 4; }
+.bc5 { grid-column: span 3; }
+.bc6 { grid-column: span 5; }
+.bc7 { grid-column: span 7; }
+.bc-num { font-family: var(--display); font-size: 80px; font-weight: 800; line-height: 1; color: rgba(200,16,46,.12); margin-bottom: 16px; }
+.bc-title { font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--t1); margin-bottom: 20px; letter-spacing: .5px; }
+.bc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.bc-tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  padding: 6px 12px; border: 1px solid var(--line); color: var(--t2);
+  transition: all .2s; cursor: default;
+}
+.bc-tag:hover { border-color: var(--r); color: var(--t1); background: var(--r-dim); }
+.bc-big-tag { font-family: var(--display); font-size: 36px; font-weight: 800; color: var(--t1); line-height: 1.1; }
+.bc-big-tag span { display: block; color: var(--r); }
+.bc-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); margin-bottom: 12px; }
+
+/* ═══════════════════════════════════════════════════
+   EXPERIENCE
+═══════════════════════════════════════════════════ */
+.exp-layout { display: grid; grid-template-columns: 2fr 5fr; gap: 80px; }
+.exp-index { display: flex; flex-direction: column; gap: 0; }
+.exp-tab {
+  padding: 20px 0; border-bottom: 1px solid var(--line);
+  cursor: pointer; /* FIX: was cursor:none — restored for usability, JS overrides on desktop */
+  transition: padding-left .3s; position: relative;
+}
+.exp-tab.active { padding-left: 20px; }
+.exp-tab.active::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--r);
+}
+.exp-tab-co { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--t2); transition: color .25s; line-height: 1; margin-bottom: 4px; }
+.exp-tab.active .exp-tab-co { color: var(--t1); }
+.exp-tab-role { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); }
+.exp-panel { display: none; }
+.exp-panel.active { display: block; }
+.exp-company-big { font-family: var(--display); font-weight: 800; font-size: clamp(36px, 5vw, 64px); color: var(--t1); line-height: 1; letter-spacing: -1px; margin-bottom: 8px; }
+.exp-role-line { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+.exp-role-text { font-size: 15px; color: var(--t2); font-weight: 300; }
+.exp-date {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--r); padding: 5px 12px; border: 1px solid rgba(200,16,46,0.3);
+  background: rgba(200,16,46,.05); white-space: nowrap; /* FIX: prevent date wrapping */
+}
+.exp-achievements { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.exp-ach {
+  display: flex; align-items: flex-start; gap: 24px;
+  padding: 24px 0; border-bottom: 1px solid var(--line);
+  opacity: 0; transform: translateX(20px);
+  transition: opacity .5s, transform .5s;
+}
+.exp-ach.shown { opacity: 1; transform: translateX(0); }
+.exp-ach-n { font-family: var(--mono); font-size: 10px; color: var(--r); opacity: .6; padding-top: 4px; min-width: 24px; }
+.exp-ach-text { font-size: 16px; line-height: 1.75; color: var(--t2); font-weight: 300; }
+.exp-ach-text strong { color: var(--t1); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════
+   CERTIFICATIONS
+═══════════════════════════════════════════════════ */
+.certs-scroll-row { display: flex; gap: 20px; margin-top: 60px; flex-wrap: wrap; }
+.cert-card {
+  flex: 1; min-width: 280px; background: var(--ink3); border: 1px solid var(--line);
+  padding: 36px; position: relative; overflow: hidden;
+  transition: transform .35s cubic-bezier(.23,1,.32,1), border-color .3s, box-shadow .3s;
+}
+.cert-card:hover { transform: translateY(-8px); border-color: rgba(200,16,46,.35); box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+.cert-card-glow {
+  position: absolute; top: -60px; right: -60px; width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(200,16,46,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cert-status {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.cert-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.cert-status-dot.live { background: #00FF88; box-shadow: 0 0 8px #00FF88; animation: blink 2s ease-in-out infinite; }
+.cert-status-dot.past { background: var(--t3); }
+.cert-status.live-s { color: #00FF88; }
+.cert-status.past-s { color: var(--t3); }
+.cert-name { font-family: var(--display); font-weight: 700; font-size: 20px; color: var(--t1); line-height: 1.25; margin-bottom: 8px; }
+.cert-by { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); margin-bottom: 20px; }
+.cert-desc { font-size: 14px; line-height: 1.75; color: var(--t2); font-weight: 300; }
+.cert-corner { position: absolute; bottom: 24px; right: 24px; font-family: var(--display); font-size: 32px; font-weight: 700; color: rgba(200,16,46,.07); line-height: 1; }
+
+/* ═══════════════════════════════════════════════════
+   WORKSHOPS
+═══════════════════════════════════════════════════ */
+.w-list { display: flex; flex-direction: column; gap: 0; max-width: 900px; margin-top: 60px; }
+.w-item {
+  display: grid; grid-template-columns: 72px 1fr;
+  border-bottom: 1px solid var(--line);
+  padding: 40px 0; transition: padding-left .3s;
+  position: relative; overflow: hidden;
+}
+.w-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--r), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s cubic-bezier(.77,0,.18,1);
+}
+.w-item:hover::before { transform: scaleX(1); }
+.w-item:hover { padding-left: 16px; }
+.w-n { font-family: var(--display); font-size: 48px; font-weight: 800; color: rgba(200,16,46,.12); line-height: 1; padding-top: 4px; }
+.w-title { font-family: var(--display); font-weight: 700; font-size: 26px; color: var(--t1); line-height: 1; margin-bottom: 10px; }
+.w-date { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--r); margin-bottom: 14px; }
+.w-desc { font-size: 15px; color: var(--t2); font-weight: 300; line-height: 1.75; max-width: 640px; }
+
+/* ═══════════════════════════════════════════════════
+   EDUCATION
+═══════════════════════════════════════════════════ */
+.edu-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 60px; }
+.edu-card {
+  position: relative; overflow: hidden; border: 1px solid var(--line);
+  padding: 48px; transition: border-color .3s, background .3s;
+}
+.edu-card:hover { border-color: rgba(200,16,46,.25); background: rgba(200,16,46,.02); }
+.edu-card-bg {
+  position: absolute; bottom: -40px; right: -40px;
+  font-family: var(--display); font-size: 120px; font-weight: 800; line-height: 1;
+  color: rgba(255,255,255,.02); white-space: nowrap; pointer-events: none;
+  transition: color .3s;
+}
+.edu-card:hover .edu-card-bg { color: rgba(200,16,46,.04); }
+.edu-year-range { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--r); margin-bottom: 20px; }
+.edu-degree { font-family: var(--display); font-weight: 700; font-size: 26px; color: var(--t1); line-height: 1.2; margin-bottom: 8px; }
+.edu-school { font-size: 15px; color: var(--t2); font-weight: 300; margin-bottom: 28px; }
+.edu-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.edu-chip { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; padding: 5px 11px; background: rgba(255,255,255,.04); border: 1px solid var(--line); color: var(--t3); }
+
+/* ═══════════════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════════════ */
+#contact { background: var(--ink); padding: 130px 52px; }
+.contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+.contact-mega {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(56px, 8vw, 120px); line-height: .88; letter-spacing: -3px;
+  margin-bottom: 36px;
+}
+.contact-mega .hollow { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.18); display: block; }
+.contact-mega .filled { color: var(--t1); display: block; }
+.contact-mega .accent { color: var(--r); display: block; }
+.contact-tagline { font-size: 16px; color: var(--t2); font-weight: 300; line-height: 1.8; max-width: 380px; margin-bottom: 48px; }
+.contact-email-big {
+  display: inline-block; font-family: var(--mono); font-size: clamp(12px, 1.5vw, 16px);
+  color: var(--t1); text-decoration: none; border-bottom: 1px solid var(--r);
+  padding-bottom: 4px; transition: color .2s;
+}
+.contact-email-big:hover { color: var(--r); }
+.contact-right { display: flex; flex-direction: column; gap: 8px; }
+.c-row {
+  display: flex; align-items: center; gap: 0; text-decoration: none;
+  border: 1px solid var(--line); padding: 24px 28px;
+  transition: all .25s; position: relative; overflow: hidden;
+}
+/* FIX: cursor:pointer on .c-row — overridden to none on desktop via JS */
+.c-row { cursor: pointer; }
+.c-row::after {
+  content: '↗'; position: absolute; right: 28px; top: 50%;
+  transform: translateY(-50%) translateX(10px);
+  font-size: 20px; color: var(--r); opacity: 0; transition: all .25s;
+}
+.c-row:hover { border-color: rgba(200,16,46,.35); background: rgba(200,16,46,.04); padding-right: 56px; }
+.c-row:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+.c-row-icon {
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); margin-right: 20px; color: var(--r); flex-shrink: 0;
+}
+.c-row-k { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); margin-bottom: 3px; }
+.c-row-v { font-size: 15px; color: var(--t1); }
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════ */
+footer {
+  background: var(--ink2); border-top: 1px solid var(--line);
+  padding: 32px 52px; display: flex; align-items: center; justify-content: space-between;
+}
+.foot-sig { font-family: var(--mono); font-size: 12px; letter-spacing: 3px; color: var(--t3); }
+.foot-sig span { color: var(--r); }
+.foot-copy { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--t3); }
+
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL ANIMATIONS
+═══════════════════════════════════════════════════ */
+.rev {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.rev.vis { opacity: 1; transform: translateY(0); }
+.rev-d1 { transition-delay: .1s; }
+.rev-d2 { transition-delay: .2s; }
+.rev-d3 { transition-delay: .3s; }
+.rev-left {
+  opacity: 0; transform: translateX(-40px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.rev-left.vis { opacity: 1; transform: translateX(0); }
+
+/* ═══════════════════════════════════════════════════
+   MOBILE NAV
+═══════════════════════════════════════════════════ */
+.mob-toggle {
+  display: none; background: none; border: none;
+  padding: 4px; flex-direction: column; gap: 5px;
+  /* FIX: cursor must be pointer (not none) on mobile */
+  cursor: pointer;
+}
+.mob-toggle span { width: 22px; height: 1.5px; background: var(--t1); display: block; transition: all .3s; }
+.mob-nav {
+  position: fixed; inset: 0; background: rgba(6,8,11,.98);
+  z-index: 850; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 28px;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.mob-nav.open { opacity: 1; pointer-events: all; }
+/* FIX: Visible close area for mobile nav — add X button */
+.mob-nav-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono); font-size: 13px; color: var(--t2);
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px; transition: color .2s;
+}
+.mob-nav-close:hover { color: var(--t1); }
+.mob-nav a {
+  font-family: var(--display); font-size: 52px; font-weight: 800;
+  color: var(--t2); text-decoration: none; transition: color .2s; letter-spacing: -1px;
+}
+.mob-nav a:hover { color: var(--t1); }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤1100px)
+═══════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  #hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-scroll { display: none; }
+  .about-layout { grid-template-columns: 1fr; gap: 60px; }
+  .bento { grid-template-columns: repeat(6, 1fr); }
+  .bc1, .bc6, .bc7 { grid-column: span 6; }
+  .bc2, .bc3, .bc4, .bc5 { grid-column: span 3; }
+  /* FIX: bc1 span 2 rows only makes sense on 12-col grid */
+  .bc1 { grid-row: auto; }
+  .exp-layout { grid-template-columns: 1fr; gap: 48px; }
+  .exp-index { flex-direction: row; overflow-x: auto; gap: 0; padding-bottom: 16px; }
+  .exp-tab { border-bottom: none; border-right: 1px solid var(--line); padding: 12px 20px; white-space: nowrap; }
+  .exp-tab.active { padding-left: 20px; border-left: 2px solid var(--r); }
+  .edu-layout { grid-template-columns: 1fr; }
+  .contact-wrap { grid-template-columns: 1fr; gap: 60px; }
+  /* Nav: smaller gaps at 1100px */
+  .nav-links { gap: 24px; padding-right: 24px; margin-right: 20px; }
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤768px)
+═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .s, #contact { padding: 80px 24px; }
+  nav { padding: 18px 24px; }
+  nav.stuck { padding: 14px 24px; }
+  /* Hide nav links AND the separator div on mobile */
+  .nav-links { display: none; }
+  .nav-hire { display: none; }
+  .mob-toggle { display: flex; }
+  .hero-left { padding: 100px 24px 80px; }
+  footer { padding: 24px; flex-direction: column; gap: 10px; text-align: center; }
+
+  /* FIX: Restore cursor on mobile — custom cursor is hidden, use auto */
+  body { cursor: auto; }
+  #cur, #cur2 { display: none; }
+
+  /* FIX: Full-width bento on mobile */
+  .bento { grid-template-columns: 1fr; gap: 8px; }
+  .bc1,.bc2,.bc3,.bc4,.bc5,.bc6,.bc7 { grid-column: span 1; grid-row: auto; }
+
+  .certs-scroll-row { flex-direction: column; }
+
+  .w-item { grid-template-columns: 48px 1fr; padding: 28px 0; }
+  .w-n { font-size: 32px; }
+  .w-title { font-size: 20px; }
+
+  .contact-mega { font-size: clamp(44px, 12vw, 80px); letter-spacing: -2px; }
+  .contact-wrap { gap: 48px; }
+
+  /* FIX: Mobile nav links smaller on very small screens */
+  .mob-nav a { font-size: 40px; }
+
+  /* FIX: exp tab scrollable on mobile */
+  .exp-tab { padding: 10px 16px; }
+  .exp-company-big { font-size: clamp(28px, 8vw, 48px); }
+
+  /* FIX: edu card padding on mobile */
+  .edu-card { padding: 32px 24px; }
+  .edu-card-bg { font-size: 80px; }
+
+  /* FIX: kv vertical text — hide on very small screens */
+  .kv-k { writing-mode: horizontal-tb; text-orientation: initial; min-width: auto; padding: 12px 14px; font-size: 8px; }
+  .kv-v { font-size: 13px; padding: 12px 16px; }
+}
+
+/* FIX: Very small phones */
+@media (max-width: 380px) {
+  .hero-h1 { font-size: clamp(48px, 14vw, 72px); }
+  .mob-nav a { font-size: 32px; gap: 20px; }
+}
+
+/* ═══════════════════════════════════════════════════
+   FOCUS / ACCESSIBILITY
+═══════════════════════════════════════════════════ */
+/* FIX: Keyboard focus styles — important for accessibility */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--r);
+  outline-offset: 3px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     LOADER
+═══════════════════════════════════════════════════ -->
+<div id="loader" role="status" aria-label="Loading">
+  <div class="loader-text">Initializing secure session</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-name">Ibrahim Bajnaid</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     CUSTOM CURSOR (desktop only)
+═══════════════════════════════════════════════════ -->
+<div id="cur" aria-hidden="true"></div>
+<div id="cur2" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     MOBILE NAV OVERLAY
+═══════════════════════════════════════════════════ -->
+<div class="mob-nav" id="mobNav" aria-label="Mobile navigation" role="navigation">
+  <button class="mob-nav-close" id="mobClose" aria-label="Close menu">✕ CLOSE</button>
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#skills" onclick="closeMob()">Skills</a>
+  <a href="#experience" onclick="closeMob()">Experience</a>
+  <a href="#certs" onclick="closeMob()">Certs</a>
+  <a href="#education" onclick="closeMob()">Education</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════ -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <a class="nav-sig" href="#hero" aria-label="Home">
+    <div class="nav-sig-dot" aria-hidden="true"></div>
+    IB_BAJNAID
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#certs">Certs</a>
+      <a href="#education">Education</a>
+    </div>
+    <a href="#contact" class="nav-hire">Hire Me</a>
+  </div>
+  <button class="mob-toggle" id="mobBtn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-status">
+      <div class="hero-status-badge">
+        <div class="hero-status-dot" aria-hidden="true"></div>
+        Available for opportunities
+      </div>
+    </div>
+
+    <!-- FIX: Each word wrapped in overflow:hidden for clean slide-up animation -->
+    <h1 class="hero-h1" aria-label="Ibrahim Bajnaid">
+      <div class="word-wrap"><span class="word" aria-hidden="true">IBRAHIM</span></div>
+      <div class="word-wrap"><span class="word" aria-hidden="true">BAJNAID</span></div>
+      <div class="word-wrap"><span class="word" aria-hidden="true">.</span></div>
+    </h1>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Role</div>
+        <div class="hero-meta-value">SOC Analyst · Cybersecurity Engineer</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Location</div>
+        <div class="hero-meta-value">Jeddah, Saudi Arabia</div>
+      </div>
+    </div>
+    <div class="hero-cta-row">
+      <a class="btn-r" href="#experience">View Work</a>
+      <a class="btn-ghost" href="#contact">
+        <div class="btn-ghost-line" aria-hidden="true"></div>
+        Let's Connect
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══ RADAR CANVAS ═══ -->
+  <div class="hero-right" aria-hidden="true">
+    <div class="hero-canvas">
+      <div class="radar-wrap" id="radarWrap">
+        <canvas id="radarCanvas" aria-label="Security radar visualization"></canvas>
+        <div class="radar-label tl">THREAT.MONITOR</div>
+        <div class="radar-label tr">SIEM.ACTIVE</div>
+        <div class="radar-label bl">CND.CERTIFIED ●</div>
+      </div>
+    </div>
+
+    <div class="hero-data-top">
+      <div>SYS.STATUS ██████ OK</div>
+      <div>CERT: CND.ACTIVE</div>
+      <div>LOC: SA.JED.23.8°N</div>
+      <div style="margin-top:12px; color:var(--r)">THREAT.LEVEL: DEFENDED</div>
+    </div>
+    <div class="hero-data-bot">
+      <div class="terminal-line"><span class="green">✓</span> SIEM monitoring active</div>
+      <div class="terminal-line"><span class="green">✓</span> Incident response ready</div>
+      <div class="terminal-line"><span class="red">▸</span> Awaiting next mission_</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="hero-scroll-num">00</div>
+    <div class="hero-scroll-track"><div class="hero-scroll-prog"></div></div>
+    <div class="hero-scroll-num">07</div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT
+═══════════════════════════════════════════════════ -->
+<section id="about" class="s">
+  <div class="s-eyebrow">01 — Profile</div>
+  <div class="about-layout">
+    <div>
+      <h2 class="about-headline rev">
+        Defending<br>
+        <em>Systems.</em>
+        Securing<br>Futures.
+      </h2>
+      <div class="about-body rev rev-d1">
+        <p>I'm a <strong>Cybersecurity and Software Engineering student</strong> at the University of Business and Technology, translating academic depth into real-world security operations.</p>
+        <p>At <span class="tag">Salama Cooperative Insurance</span>, I operated in the SOC trenches — monitoring live threats, hunting adversaries, and turning raw security events into actionable intelligence. That experience sharpened my instincts and deepened my command of <strong>SIEM platforms, incident response, and threat detection</strong>.</p>
+        <p>I carry the <strong>EC-Council CND certification</strong> and continually expand my expertise across AI, data analytics, and social engineering defense. My goal: to be the analyst who doesn't just react — but anticipates.</p>
+      </div>
+    </div>
+    <div class="about-right rev rev-d2">
+      <div class="kv"><div class="kv-k">University</div><div class="kv-v">University of Business and Technology, Jeddah</div></div>
+      <div class="kv"><div class="kv-k">Major</div><div class="kv-v">B.Sc. Software Engineering — Cybersecurity Specialization</div></div>
+      <div class="kv"><div class="kv-k">Graduation</div><div class="kv-v">Expected Spring 2026</div></div>
+      <div class="kv"><div class="kv-k">Cert</div><div class="kv-v">EC-Council CND — Active</div></div>
+      <div class="kv"><div class="kv-k">Seeking</div><div class="kv-v">Internships &amp; Junior Cybersecurity Roles</div></div>
+      <div class="kv"><div class="kv-k">Location</div><div class="kv-v">Jeddah, Saudi Arabia</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     SKILLS
+═══════════════════════════════════════════════════ -->
+<section id="skills" class="s s-alt">
+  <div class="s-eyebrow">02 — Skills Set</div>
+  <div style="font-family:var(--display);font-weight:800;font-size:clamp(40px,5vw,68px);color:var(--t1);letter-spacing:-1px;margin-bottom:48px;" class="rev">Technical Skills</div>
+  <div class="bento" role="list">
+    <div class="bento-cell bc1 rev" role="listitem">
+      <div class="bc-num" aria-hidden="true">01</div>
+      <div class="bc-title">Cybersecurity Core</div>
+      <div class="bc-tags">
+        <span class="bc-tag">SOC Analysis</span>
+        <span class="bc-tag">SIEM Monitoring</span>
+        <span class="bc-tag">Phishing Analysis</span>
+        <span class="bc-tag">Incident Response</span>
+        <span class="bc-tag">Threat Detection</span>
+        <span class="bc-tag">IDS / IPS</span>
+        <span class="bc-tag">Firewall Management</span>
+        <span class="bc-tag">Threat Hunting</span>
+        <span class="bc-tag">Network Defense</span>
+        <span class="bc-tag">Penetration Testing</span>
+      </div>
+    </div>
+    <div class="bento-cell bc2 rev rev-d1" role="listitem">
+      <div class="bc-sub">Networking</div>
+      <div class="bc-big-tag">TCP/IP<span>DNS · VPN</span></div>
+    </div>
+    <div class="bento-cell bc3 rev rev-d2" style="background:linear-gradient(135deg, var(--ink3), rgba(200,16,46,0.08));" role="listitem">
+      <div class="bc-sub">Certified</div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--r);line-height:1.8;">CND<br>EC-COUNCIL<br><span style="color:var(--t3)">ACTIVE ●</span></div>
+    </div>
+    <div class="bento-cell bc4 rev rev-d1" role="listitem">
+      <div class="bc-num" aria-hidden="true">02</div>
+      <div class="bc-title">Programming</div>
+      <div class="bc-tags">
+        <span class="bc-tag">Python</span>
+        <span class="bc-tag">SQL</span>
+        <span class="bc-tag">DAX</span>
+        <span class="bc-tag">Scripting</span>
+        <span class="bc-tag">Data Structures</span>
+      </div>
+    </div>
+    <div class="bento-cell bc5 rev rev-d2" role="listitem">
+      <div class="bc-sub">Tools</div>
+      <div class="bc-tags" style="margin-top:8px;">
+        <span class="bc-tag">Power BI</span>
+        <span class="bc-tag">Git</span>
+        <span class="bc-tag">PyCharm</span>
+        <span class="bc-tag">SIEM</span>
+      </div>
+    </div>
+    <div class="bento-cell bc6 rev rev-d1" role="listitem">
+      <div class="bc-sub">AI &amp; Analytics</div>
+      <div class="bc-tags">
+        <span class="bc-tag">ML Fundamentals</span>
+        <span class="bc-tag">Data Modeling</span>
+        <span class="bc-tag">Power BI Dashboards</span>
+      </div>
+    </div>
+    <div class="bento-cell bc7 rev rev-d2" style="display:flex;align-items:center;gap:40px;flex-wrap:wrap;" role="listitem">
+      <div style="font-family:var(--display);font-weight:800;font-size:40px;color:var(--t1);line-height:1;">Protocols<br><span style="color:var(--r);font-size:22px;">Network Architecture</span></div>
+      <div class="bc-tags">
+        <span class="bc-tag">Packet Analysis</span>
+        <span class="bc-tag">Network Protocols</span>
+        <span class="bc-tag">VPN Security</span>
+        <span class="bc-tag">IDS/IPS Deploy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     EXPERIENCE
+═══════════════════════════════════════════════════ -->
+<section id="experience" class="s">
+  <div class="s-eyebrow">03 — Deployments</div>
+  <div style="font-family:var(--display);font-weight:800;font-size:clamp(40px,5vw,68px);color:var(--t1);letter-spacing:-1px;margin-bottom:60px;" class="rev">Experience</div>
+  <div class="exp-layout rev">
+    <div class="exp-index" role="tablist" aria-label="Experience tabs">
+      <div class="exp-tab active" role="tab" aria-selected="true" aria-controls="exp1" tabindex="0" onclick="switchExp(this,'exp1')" onkeydown="if(event.key==='Enter'||event.key===' ')switchExp(this,'exp1')">
+        <div class="exp-tab-co">Salama</div>
+        <div class="exp-tab-role">SOC Analyst Intern</div>
+      </div>
+      <div class="exp-tab" role="tab" aria-selected="false" aria-controls="exp2" tabindex="0" onclick="switchExp(this,'exp2')" onkeydown="if(event.key==='Enter'||event.key===' ')switchExp(this,'exp2')">
+        <div class="exp-tab-co">Next Role</div>
+        <div class="exp-tab-role" style="color:var(--r)">Open to offers →</div>
+      </div>
+    </div>
+    <div>
+      <div id="exp1" class="exp-panel active" role="tabpanel">
+        <div class="exp-company-big">Salama Insurance</div>
+        <div class="exp-role-line">
+          <div class="exp-role-text">SOC Analyst Intern — Cooperative Insurance Company</div>
+          <div class="exp-date">Summer 2025</div>
+        </div>
+        <ul class="exp-achievements">
+          <li class="exp-ach">
+            <span class="exp-ach-n" aria-hidden="true">01</span>
+            <span class="exp-ach-text">Monitored and analyzed security events using <strong>enterprise SIEM platforms</strong>, identifying and escalating potential threats in real time to minimize organizational risk exposure and attack surface.</span>
+          </li>
+          <li class="exp-ach">
+            <span class="exp-ach-n" aria-hidden="true">02</span>
+            <span class="exp-ach-text">Led <strong>phishing campaign analysis</strong> to measure organizational vulnerability, contributing to targeted security awareness initiatives that significantly strengthened the human element of the security posture.</span>
+          </li>
+          <li class="exp-ach">
+            <span class="exp-ach-n" aria-hidden="true">03</span>
+            <span class="exp-ach-text">Authored <strong>monthly incident reports</strong> summarizing threat patterns, response actions, and strategic security recommendations — delivered directly to leadership for informed decision-making.</span>
+          </li>
+          <li class="exp-ach">
+            <span class="exp-ach-n" aria-hidden="true">04</span>
+            <span class="exp-ach-text">Participated in <strong>proactive threat hunting operations</strong> with the security team, documenting all findings using established incident response frameworks and operational playbooks.</span>
+          </li>
+        </ul>
+      </div>
+      <div id="exp2" class="exp-panel" role="tabpanel">
+        <div class="exp-company-big" style="color:var(--t3);">Your Company</div>
+        <div class="exp-role-line">
+          <div class="exp-role-text" style="color:var(--t3);">Junior SOC Analyst · Cybersecurity Engineer</div>
+          <div class="exp-date">2026 →</div>
+        </div>
+        <div style="padding:40px 0;font-family:var(--mono);font-size:13px;color:var(--t3);letter-spacing:1px;line-height:2.5;">
+          <div>Seeking a team where I can —</div>
+          <div style="color:var(--t2);">⟶ Hunt threats before they surface</div>
+          <div style="color:var(--t2);">⟶ Build and harden security operations</div>
+          <div style="color:var(--t2);">⟶ Grow into a security engineering role</div>
+          <div style="margin-top:32px;"><a href="#contact" style="color:var(--r);text-decoration:none;">Get in touch →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     CERTIFICATIONS
+═══════════════════════════════════════════════════ -->
+<section id="certs" class="s s-alt">
+  <div class="s-eyebrow">04 — Credentials</div>
+  <div style="font-family:var(--display);font-weight:800;font-size:clamp(40px,5vw,68px);color:var(--t1);letter-spacing:-1px;" class="rev">Certifications</div>
+  <div class="certs-scroll-row">
+    <article class="cert-card rev rev-d1">
+      <div class="cert-card-glow" aria-hidden="true"></div>
+      <div class="cert-status live-s"><div class="cert-status-dot live" aria-hidden="true"></div>Active Certification</div>
+      <div class="cert-name">EC-Council Certified<br>Network Defender</div>
+      <div class="cert-by">EC-Council · CND</div>
+      <div class="cert-desc">Expertise in comprehensive network defense encompassing threat protection, detection, and predictive modeling. Proficient in firewall config, IDS/IPS, VPN security, and SOC fundamentals.</div>
+      <div class="cert-corner" aria-hidden="true">CND</div>
+    </article>
+    <article class="cert-card rev rev-d2">
+      <div class="cert-card-glow" aria-hidden="true"></div>
+      <div class="cert-status past-s"><div class="cert-status-dot past" aria-hidden="true"></div>2024</div>
+      <div class="cert-name">Fundamentals of<br>Artificial Intelligence</div>
+      <div class="cert-by">SDAIA — Saudi Data &amp; AI Authority</div>
+      <div class="cert-desc">Foundational AI concepts, machine learning models, and applications within the Saudi Vision 2030 digital transformation landscape.</div>
+      <div class="cert-corner" aria-hidden="true">AI</div>
+    </article>
+    <article class="cert-card rev rev-d3">
+      <div class="cert-card-glow" aria-hidden="true"></div>
+      <div class="cert-status past-s"><div class="cert-status-dot past" aria-hidden="true"></div>2024</div>
+      <div class="cert-name">Introduction to DAX<br>— Power BI</div>
+      <div class="cert-by">Microsoft Power BI</div>
+      <div class="cert-desc">Applied skills in DAX expressions for data modeling, calculated columns, and measures — enabling data-driven security reporting through advanced dashboard analytics.</div>
+      <div class="cert-corner" aria-hidden="true">DAX</div>
+    </article>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     WORKSHOPS
+═══════════════════════════════════════════════════ -->
+<section id="workshops" class="s">
+  <div class="s-eyebrow">05 — Training</div>
+  <div style="font-family:var(--display);font-weight:800;font-size:clamp(40px,5vw,68px);color:var(--t1);letter-spacing:-1px;" class="rev">Workshops</div>
+  <div class="w-list">
+    <article class="w-item rev">
+      <div class="w-n" aria-hidden="true">01</div>
+      <div class="w-body">
+        <div class="w-title">GDG Phishing &amp; Social Engineering</div>
+        <div class="w-date">April 17, 2025</div>
+        <div class="w-desc">Hands-on simulations covering advanced phishing tactics, social engineering attack vectors, and defensive countermeasures. Built attacker-mindset skills to anticipate and neutralize human-layer threats.</div>
+      </div>
+    </article>
+    <article class="w-item rev rev-d1">
+      <div class="w-n" aria-hidden="true">02</div>
+      <div class="w-body">
+        <div class="w-title">Project Management Practicals</div>
+        <div class="w-date">July 13–16, 2025 · UBT Training Center</div>
+        <div class="w-desc">Intensive training in project planning, task prioritization, stakeholder communication, and agile methodologies. Applied frameworks to case study scenarios, sharpening risk assessment and coordination skills.</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     EDUCATION
+═══════════════════════════════════════════════════ -->
+<section id="education" class="s s-alt">
+  <div class="s-eyebrow">06 — Academic</div>
+  <div style="font-family:var(--display);font-weight:800;font-size:clamp(40px,5vw,68px);color:var(--t1);letter-spacing:-1px;" class="rev">Education</div>
+  <div class="edu-layout">
+    <article class="edu-card rev rev-d1">
+      <div class="edu-card-bg" aria-hidden="true">UBT</div>
+      <div class="edu-year-range">Aug 2021 — Spring 2026</div>
+      <div class="edu-degree">B.Sc. Software Engineering<br>Cybersecurity Specialization</div>
+      <div class="edu-school">University of Business and Technology (UBT), Jeddah</div>
+      <div class="edu-chips">
+        <span class="edu-chip">Data Structures &amp; Algorithms</span>
+        <span class="edu-chip">Network Security</span>
+        <span class="edu-chip">Discrete Systems</span>
+        <span class="edu-chip">Algorithm Complexity</span>
+        <span class="edu-chip">Python Programming</span>
+      </div>
+    </article>
+    <article class="edu-card rev rev-d2">
+      <div class="edu-card-bg" aria-hidden="true">JKIS</div>
+      <div class="edu-year-range">Aug 2017 — Jul 2021</div>
+      <div class="edu-degree">High School Diploma</div>
+      <div class="edu-school">Jeddah Knowledge International School</div>
+      <div class="edu-chips">
+        <span class="edu-chip">Elective: Automotive Engineering</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-left rev">
+      <div class="s-eyebrow">07 — Reach Out</div>
+      <div class="contact-mega">
+        <span class="hollow">Let's</span>
+        <span class="filled">Build</span>
+        <span class="accent">Together.</span>
+      </div>
+      <p class="contact-tagline">Actively seeking internships and junior cybersecurity roles. If you're building a security-focused team or have an opportunity — I want to hear from you.</p>
+      <a href="mailto:ibrahimbajnaid9@gmail.com" class="contact-email-big">ibrahimbajnaid9@gmail.com</a>
+    </div>
+    <div class="contact-right rev rev-d2">
+      <a href="mailto:ibrahimbajnaid9@gmail.com" class="c-row">
+        <div class="c-row-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <div><div class="c-row-k">Email</div><div class="c-row-v">ibrahimbajnaid9@gmail.com</div></div>
+      </a>
+      <a href="tel:+966531301555" class="c-row">
+        <div class="c-row-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+        <div><div class="c-row-k">Phone</div><div class="c-row-v">+966 53 130 1555</div></div>
+      </a>
+      <a href="https://linkedin.com/in/ibrahimbajnaid4123" target="_blank" rel="noopener noreferrer" class="c-row">
+        <div class="c-row-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <div><div class="c-row-k">LinkedIn</div><div class="c-row-v">linkedin.com/in/ibrahimbajnaid4123</div></div>
+      </a>
+      <div class="c-row" style="cursor:default; pointer-events:none;">
+        <div class="c-row-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg></div>
+        <div><div class="c-row-k">Location</div><div class="c-row-v">Jeddah, Saudi Arabia</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════ -->
+<footer>
+  <div class="foot-sig">IB<span>_</span>BAJNAID<span>.</span></div>
+  <div class="foot-copy">© 2026 — All rights reserved</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+// ─── LOADER ─────────────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('gone');
+    loader.addEventListener('transitionend', () => {
+      loader.style.display = 'none';
+    }, { once: true });
+  }, 1700);
+});
+
+// ─── CUSTOM CURSOR ──────────────────────────────
+const cur  = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+let mx = 0, my = 0, rx = 0, ry = 0;
+let cursorVisible = false;
+
+const isTouch = window.matchMedia('(hover: none)').matches;
+if (!isTouch) {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    cur.style.left  = mx + 'px';
+    cur.style.top   = my + 'px';
+    if (!cursorVisible) {
+      cur.classList.add('visible');
+      cur2.classList.add('visible');
+      cursorVisible = true;
+    }
+  });
+
+  (function loop() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    cur2.style.left = rx + 'px';
+    cur2.style.top  = ry + 'px';
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll(
+    'a, button, .exp-tab, .w-item, .cert-card, .kv, .bento-cell, .c-row'
+  ).forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('c-big'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('c-big'));
+  });
+}
+
+// ─── BENTO MOUSE RADIAL ─────────────────────────
+document.querySelectorAll('.bento-cell').forEach(cell => {
+  cell.addEventListener('mousemove', e => {
+    const r = cell.getBoundingClientRect();
+    cell.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
+    cell.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+  });
+});
+
+// ─── STICKY NAV ─────────────────────────────────
+const nav = document.getElementById('nav');
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      nav.classList.toggle('stuck', window.scrollY > 60);
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, { passive: true });
+
+// ─── SCROLL REVEAL ──────────────────────────────
+const revEls = document.querySelectorAll('.rev, .rev-left');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('vis');
+      revObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revEls.forEach(el => revObs.observe(el));
+
+// ─── EXPERIENCE TABS ────────────────────────────
+function switchExp(tab, target) {
+  document.querySelectorAll('.exp-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+
+  tab.classList.add('active');
+  tab.setAttribute('aria-selected', 'true');
+
+  const panel = document.getElementById(target);
+  if (!panel) return;
+  panel.classList.add('active');
+
+  panel.querySelectorAll('.exp-ach').forEach(ach => ach.classList.remove('shown'));
+  requestAnimationFrame(() => {
+    panel.querySelectorAll('.exp-ach').forEach((ach, i) => {
+      setTimeout(() => ach.classList.add('shown'), 60 + i * 100);
+    });
+  });
+}
+
+setTimeout(() => {
+  const panel = document.getElementById('exp1');
+  if (panel) {
+    panel.querySelectorAll('.exp-ach').forEach((ach, i) => {
+      setTimeout(() => ach.classList.add('shown'), 200 + i * 120);
+    });
+  }
+}, 2000);
+
+// ─── MOBILE NAV ─────────────────────────────────
+const mobBtn   = document.getElementById('mobBtn');
+const mobNav   = document.getElementById('mobNav');
+const mobClose = document.getElementById('mobClose');
+let navOpen = false;
+
+function openMob() {
+  navOpen = true;
+  mobNav.classList.add('open');
+  mobBtn.setAttribute('aria-expanded', 'true');
+  const spans = mobBtn.querySelectorAll('span');
+  spans[0].style.transform = 'rotate(45deg) translate(4px, 5px)';
+  spans[1].style.opacity   = '0';
+  spans[2].style.transform = 'rotate(-45deg) translate(4px, -5px)';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMob() {
+  navOpen = false;
+  mobNav.classList.remove('open');
+  mobBtn.setAttribute('aria-expanded', 'false');
+  const spans = mobBtn.querySelectorAll('span');
+  spans[0].style.transform = '';
+  spans[1].style.opacity   = '1';
+  spans[2].style.transform = '';
+  document.body.style.overflow = '';
+}
+
+mobBtn.addEventListener('click', () => { navOpen ? closeMob() : openMob(); });
+if (mobClose) mobClose.addEventListener('click', closeMob);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && navOpen) closeMob(); });
+mobNav.addEventListener('click', e => { if (e.target === mobNav) closeMob(); });
+
+// ════════════════════════════════════════════════════
+//  RADAR — Canvas renderer
+//  Solves the SVG gradient-rotation problem entirely.
+//  A canvas arc+conic-gradient approach renders pixel-
+//  perfect at any DPR, with smooth 60fps sweep.
+// ════════════════════════════════════════════════════
+(function initRadar() {
+  const canvas = document.getElementById('radarCanvas');
+  if (!canvas) return;
+
+  const wrap = document.getElementById('radarWrap');
+  const ctx  = canvas.getContext('2d');
+  const DPR  = window.devicePixelRatio || 1;
+
+  // Blip definitions — polar (angle in radians from top, radius fraction)
+  const BLIPS = [
+    { a: Math.PI * 0.42, r: 0.62, size: 3.5, phase: 0      },
+    { a: Math.PI * 1.28, r: 0.49, size: 3.5, phase: 1.3    },
+    { a: Math.PI * 1.72, r: 0.56, size: 2.5, phase: 2.6    },
+  ];
+
+  // Sweep state
+  let sweepAngle = -Math.PI / 2; // start pointing up (12 o'clock)
+  const SWEEP_SPEED = (2 * Math.PI) / (4 * 60); // full rotation in 4s @ 60fps
+  let lastTime = 0;
+  let radarVisible = false;
+  let fadeIn = 0; // 0→1 opacity ramp
+
+  function resize() {
+    const size = wrap.offsetWidth;
+    canvas.width  = size * DPR;
+    canvas.height = size * DPR;
+    canvas.style.width  = size + 'px';
+    canvas.style.height = size + 'px';
+  }
+
+  function draw(ts) {
+    if (!radarVisible) { requestAnimationFrame(draw); return; }
+
+    const dt = Math.min(ts - lastTime, 50); // clamp for tab-switch
+    lastTime = ts;
+
+    // Fade in over ~800ms
+    fadeIn = Math.min(1, fadeIn + dt / 800);
+
+    sweepAngle += SWEEP_SPEED * (dt / (1000 / 60));
+
+    const S    = canvas.width;           // canvas px (DPR-scaled)
+    const cx   = S / 2;
+    const cy   = S / 2;
+    const maxR = S * 0.458;             // outermost ring
+
+    ctx.clearRect(0, 0, S, S);
+    ctx.save();
+    ctx.globalAlpha = fadeIn;
+
+    const R = '#C8102E';
+    const R2 = '#FF1F3D';
+
+    // ── Background dark fill ──
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(6,8,11,0.6)';
+    ctx.fill();
+
+    // ── Concentric rings ──
+    const rings = [
+      { r: maxR * 0.227, alpha: 0.55 },
+      { r: maxR * 0.454, alpha: 0.30 },
+      { r: maxR * 0.727, alpha: 0.15 },
+      { r: maxR,         alpha: 0.08 },
+    ];
+    rings.forEach(({ r, alpha }) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(200,16,46,${alpha})`;
+      ctx.lineWidth = DPR * 0.8;
+      ctx.stroke();
+    });
+
+    // ── Crosshairs ──
+    ctx.strokeStyle = 'rgba(200,16,46,0.10)';
+    ctx.lineWidth = DPR * 0.7;
+    [[cx, cy - maxR, cx, cy + maxR], [cx - maxR, cy, cx + maxR, cy]].forEach(([x1,y1,x2,y2]) => {
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
+    // Diagonals
+    ctx.strokeStyle = 'rgba(200,16,46,0.05)';
+    const d = maxR * 0.707;
+    [[cx-d,cy-d,cx+d,cy+d],[cx+d,cy-d,cx-d,cy+d]].forEach(([x1,y1,x2,y2]) => {
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
+
+    // ── Tick marks ──
+    ctx.strokeStyle = 'rgba(200,16,46,0.22)';
+    ctx.lineWidth = DPR;
+    const ticks = [0, Math.PI/2, Math.PI, Math.PI*1.5,
+                   Math.PI/4, Math.PI*3/4, Math.PI*5/4, Math.PI*7/4];
+    ticks.forEach(a => {
+      const x1 = cx + Math.cos(a - Math.PI/2) * maxR;
+      const y1 = cy + Math.sin(a - Math.PI/2) * maxR;
+      const x2 = cx + Math.cos(a - Math.PI/2) * (maxR * 0.93);
+      const y2 = cy + Math.sin(a - Math.PI/2) * (maxR * 0.93);
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
+
+    // ── Sweep blade ──
+    // The blade spans ~75° behind the sweep line, fading to transparent.
+    // Because this is canvas, the gradient rotates with the path perfectly.
+    const BLADE = Math.PI * (75/180); // 75 degrees
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    // Arc from sweepAngle back BLADE radians (counter-clockwise for the trail)
+    ctx.arc(cx, cy, maxR, sweepAngle - BLADE, sweepAngle);
+    ctx.closePath();
+    // Conic gradient: opaque at sweepAngle, transparent BLADE radians behind
+    // Approximate with a radial/linear combo for max browser compat
+    const gx = cx + Math.cos(sweepAngle) * maxR * 0.01;
+    const gy = cy + Math.sin(sweepAngle) * maxR * 0.01;
+    const grad = ctx.createConicalGradient
+      ? ctx.createConicalGradient(sweepAngle - BLADE, sweepAngle, cx, cy)
+      : null;
+
+    if (grad) {
+      grad.addColorStop(0, 'rgba(200,16,46,0)');
+      grad.addColorStop(1, 'rgba(200,16,46,0.38)');
+      ctx.fillStyle = grad;
+    } else {
+      // Fallback: radial gradient from center
+      const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+      rg.addColorStop(0, 'rgba(200,16,46,0.35)');
+      rg.addColorStop(1, 'rgba(200,16,46,0.04)');
+      ctx.fillStyle = rg;
+    }
+    ctx.fill();
+    ctx.restore();
+
+    // ── Sweep leading line ──
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(
+      cx + Math.cos(sweepAngle) * maxR,
+      cy + Math.sin(sweepAngle) * maxR
+    );
+    // Glowing line: draw wide+dim then narrow+bright
+    ctx.strokeStyle = 'rgba(200,16,46,0.25)';
+    ctx.lineWidth = DPR * 4;
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,31,61,0.9)';
+    ctx.lineWidth = DPR * 1.2;
+    ctx.stroke();
+    ctx.restore();
+
+    // Leading dot at tip
+    const tipX = cx + Math.cos(sweepAngle) * maxR;
+    const tipY = cy + Math.sin(sweepAngle) * maxR;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(tipX, tipY, DPR * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#FF1F3D';
+    ctx.shadowColor = '#FF1F3D';
+    ctx.shadowBlur = 10 * DPR;
+    ctx.fill();
+    ctx.restore();
+
+    // ── Blips ──
+    const t = ts / 1000;
+    BLIPS.forEach(b => {
+      const angle = b.a - Math.PI / 2; // offset so 0 = top
+      const bx = cx + Math.cos(angle) * b.r * maxR;
+      const by = cy + Math.sin(angle) * b.r * maxR;
+      const pulse = 0.5 + 0.5 * Math.sin((t - b.phase) * (Math.PI * 2 / 3.5));
+
+      // Outer glow ring
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(bx, by, b.size * DPR * 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,31,61,${0.12 * pulse})`;
+      ctx.fill();
+      ctx.restore();
+
+      // Core dot
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(bx, by, b.size * DPR * 0.85, 0, Math.PI * 2);
+      ctx.fillStyle = '#FF1F3D';
+      ctx.shadowColor = '#FF1F3D';
+      ctx.shadowBlur = 8 * DPR;
+      ctx.globalAlpha = 0.3 + 0.7 * pulse;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // ── Center dot ──
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, DPR * 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#C8102E';
+    ctx.shadowColor = '#C8102E';
+    ctx.shadowBlur = 12 * DPR;
+    ctx.fill();
+    // Center ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, DPR * 8, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(200,16,46,0.4)';
+    ctx.lineWidth = DPR * 0.8;
+    ctx.shadowBlur = 0;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore(); // globalAlpha
+    requestAnimationFrame(draw);
+  }
+
+  // Start after loader clears (same 2s delay as CSS fade-in)
+  setTimeout(() => {
+    radarVisible = true;
+    lastTime = performance.now();
+  }, 2000);
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
