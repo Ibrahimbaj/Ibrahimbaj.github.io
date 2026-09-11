@@ -1117,46 +1117,57 @@ a:focus-visible, button:focus-visible {
       <div>
         <div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Senior Project · Solo</div>
         <div style="font-family:var(--display);font-weight:800;font-size:clamp(28px,3.5vw,46px);color:var(--t1);letter-spacing:-0.5px;line-height:1.05;">SecureIoT-EMS</div>
-        <div style="font-family:var(--sans);font-size:15px;color:var(--t2);margin-top:6px;">Secure IoT Energy Management System</div>
+        <div style="font-family:var(--sans);font-size:15px;color:var(--t2);margin-top:6px;">Smart Home Energy Intelligence Platform</div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
         <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">Python</span>
         <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">Flask</span>
-        <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">IoT Security</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">ML · Isolation Forest</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">Gemini AI</span>
+        <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">ESP32</span>
         <span style="font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 14px;border:1px solid var(--line);color:var(--t2);text-transform:uppercase;">RBAC</span>
       </div>
     </div>
 
     <p style="font-size:15px;color:var(--t2);line-height:1.8;max-width:780px;margin-bottom:40px;">
-      A full-stack web application that simulates a smart home IoT environment with real-time energy monitoring and cybersecurity controls built in from the ground up. Designed to demonstrate how security principles can be applied directly at the device and application layer.
+      A full-stack IoT energy management platform that monitors, protects, and optimises a smart home's power consumption in real time — with ML-powered anomaly detection, AI-generated security reports, and enterprise-grade access control built in from the ground up. Integrates ESP32 sensor nodes, a 2-second live refresh pipeline, and Gemini AI to turn raw energy data into actionable security intelligence.
     </p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:40px;">
       <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Real-Time Monitoring</div>
-        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Live sensor simulation tracking voltage, current, and power consumption across smart home appliances — with automated alerts when usage exceeds safety thresholds.</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Live Energy Monitoring</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Real-time voltage, current, and power readings from ESP32 sensor nodes refreshed every 2 seconds across 9 appliances in 4 rooms — Living Room, Bedroom, Kitchen, and Laundry.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">ML Anomaly Detection</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">An Isolation Forest model trains continuously on the last 20 sensor readings, flagging unusual consumption patterns that fixed thresholds alone would miss.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">AI-Generated Security Reports</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Gemini AI produces root-cause summaries, per-alert risk ratings, and plain-language recommendations — bundled directly into the exported CSV report.</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
         <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Role-Based Access Control</div>
-        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Two-tier access system — Home User and Administrator — with hashed credentials (PBKDF2-SHA256) and session management to enforce least-privilege principles.</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Two-tier access — Home User and Administrator — with PBKDF2-SHA256 hashing, session management, and per-device token assignments enforcing least-privilege at every layer.</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
-        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Security Audit Log</div>
-        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Every user action — logins, device toggles, exports, alerts — is timestamped and logged in a real-time security event feed accessible to administrators.</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Security Center & Audit Log</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Live color-coded security score with full control breakdown, plus an append-only audit trail of every login, lockout, device toggle, and alert — admin-only access.</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--line);padding:24px;">
         <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--r);margin-bottom:10px;">Smart Scheduling Engine</div>
-        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Intelligent peak/off-peak detection that recommends when to shift non-critical appliances to reduce energy costs while keeping critical devices always protected.</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Peak/off-peak detection recommends when to shift non-critical appliances to cut energy costs, while critical devices are always protected from accidental shutoff.</div>
       </div>
     </div>
 
     <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);">Also includes —</div>
-      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">CSV Export</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">AI-Enhanced CSV Export</span>
       <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">IoT Device Registry</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">Firmware Version Tracking</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">2s Sensor Refresh Pipeline</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">9 Devices · 4 Rooms</span>
       <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">TLS 1.2 Device Auth</span>
-      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">Power Analytics Dashboard</span>
-      <span style="font-family:var(--mono);font-size:10px;color:var(--t2);padding:5px 12px;border:1px solid var(--line);">Threat Simulation</span>
     </div>
   </article>
 </section>
